@@ -323,15 +323,17 @@ var WaveSurfer = {
         var my = this;
         // Create file reader
         var reader = new FileReader();
-        reader.addEventListener('progress', function (e) {
+        reader.onprogress = function(e) {
             my.onProgress(e);
-        });
-        reader.addEventListener('load', function (e) {
+        };
+        reader.onload = function(e) {
             my.loadArrayBuffer(e.target.result);
-        });
-        reader.addEventListener('error', function () {
-            my.fireEvent('error', 'Error reading file');
-        });
+        };
+        reader.onloadend = function() {
+            if (reader.error) {
+                my.fireEvent('error', 'Error reading file');
+            }
+        };
         reader.readAsArrayBuffer(blob);
         this.empty();
     },
